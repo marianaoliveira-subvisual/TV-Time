@@ -16,7 +16,7 @@ export function CalendarPage() {
     getUpcoming().then((res) => setUpcoming(res.upcoming));
   }, []);
 
-  if (!upcoming) return <p className="text-slate-500 text-sm">Loading…</p>;
+  if (!upcoming) return <p className="text-stone-400 text-sm">Loading…</p>;
 
   const groups = new Map<string, UpcomingEpisode[]>();
   for (const ep of upcoming) {
@@ -27,37 +27,37 @@ export function CalendarPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold mb-1">Upcoming</h1>
-      <p className="text-slate-400 text-sm mb-6">New episodes from shows you're tracking.</p>
+      <h1 className="text-xl font-bold mb-1 text-stone-800">Upcoming</h1>
+      <p className="text-stone-500 text-sm mb-6">New episodes from shows you're tracking.</p>
 
       {groups.size === 0 ? (
-        <p className="text-slate-500 text-sm">
+        <p className="text-stone-400 text-sm">
           No upcoming episodes.{" "}
-          <Link to="/" className="text-indigo-400 hover:text-indigo-300">
+          <Link to="/" className="text-sage-dark font-medium hover:underline">
             Add shows to your library
           </Link>{" "}
           to see them here.
         </p>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-6 pb-2">
           {[...groups.entries()].map(([date, episodes]) => (
             <div key={date}>
-              <h2 className="text-sm font-semibold text-slate-400 mb-2">{formatDate(date)}</h2>
+              <h2 className="text-sm font-semibold text-sage-dark mb-2">{formatDate(date)}</h2>
               <div className="space-y-2">
                 {episodes.map((ep) => (
                   <Link
                     key={ep.episodeId}
                     to={`/shows/${ep.showTmdbId}`}
-                    className="flex items-center gap-3 bg-slate-900 border border-slate-800 rounded-lg p-3 hover:border-indigo-500 transition"
+                    className="flex items-center gap-3 bg-white border border-stone-900/10 rounded-xl p-3 hover:border-sage transition shadow-sm"
                   >
                     <Poster
                       name={ep.showName}
                       posterPath={ep.showPosterPath}
-                      className="w-10 aspect-[2/3] rounded-md shrink-0"
+                      className="w-10 aspect-[2/3] rounded-lg shrink-0"
                     />
                     <div className="min-w-0">
-                      <p className="text-sm font-medium truncate">{ep.showName}</p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-sm font-medium truncate text-stone-800">{ep.showName}</p>
+                      <p className="text-xs text-stone-400">
                         S{ep.seasonNumber} E{ep.episodeNumber} · {ep.episodeName}
                       </p>
                     </div>

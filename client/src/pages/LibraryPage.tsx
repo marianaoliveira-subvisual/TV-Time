@@ -28,22 +28,22 @@ export function LibraryPage() {
     reload();
   }
 
-  if (!library) return <p className="text-slate-500 text-sm">Loading…</p>;
+  if (!library) return <p className="text-stone-400 text-sm">Loading…</p>;
 
   const filtered = filter === "all" ? library : library.filter((l) => l.status === filter);
 
   return (
     <div>
-      <h1 className="text-xl font-bold mb-1">My Shows</h1>
-      <p className="text-slate-400 text-sm mb-4">Everything you're tracking.</p>
+      <h1 className="text-xl font-bold mb-1 text-stone-800">My Shows</h1>
+      <p className="text-stone-500 text-sm mb-4">Everything you're tracking.</p>
 
-      <div className="flex gap-1 mb-6">
+      <div className="flex gap-1 mb-5 overflow-x-auto">
         {(["all", "watching", "completed", "planned", "dropped"] as const).map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
-            className={`rounded-md px-3 py-1.5 text-sm font-medium transition ${
-              filter === f ? "bg-slate-800 text-white" : "text-slate-400 hover:bg-slate-800/60"
+            className={`shrink-0 rounded-full px-3 py-1.5 text-sm font-medium transition ${
+              filter === f ? "bg-sage text-white" : "bg-white text-stone-500 border border-stone-900/10"
             }`}
           >
             {f === "all" ? "All" : STATUS_LABELS[f]}
@@ -52,15 +52,15 @@ export function LibraryPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <p className="text-slate-500 text-sm">
+        <p className="text-stone-400 text-sm">
           Nothing here yet.{" "}
-          <Link to="/" className="text-indigo-400 hover:text-indigo-300">
+          <Link to="/" className="text-sage-dark font-medium hover:underline">
             Find something to watch
           </Link>
           .
         </p>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-3 pb-2">
           {filtered.map((item) => {
             const pct = item.progress.total
               ? Math.round((item.progress.watched / item.progress.total) * 100)
@@ -68,36 +68,38 @@ export function LibraryPage() {
             return (
               <div
                 key={item.id}
-                className="flex items-center gap-4 bg-slate-900 border border-slate-800 rounded-lg p-3"
+                className="bg-white border border-stone-900/10 rounded-xl p-3 shadow-sm"
               >
-                <Link to={`/shows/${item.show.tmdbId}`} className="shrink-0">
-                  <Poster
-                    name={item.show.name}
-                    posterPath={item.show.posterPath}
-                    className="w-14 aspect-[2/3] rounded-md"
-                  />
-                </Link>
-                <div className="flex-1 min-w-0">
-                  <Link
-                    to={`/shows/${item.show.tmdbId}`}
-                    className="font-medium hover:text-indigo-400 truncate block"
-                  >
-                    {item.show.name}
-                  </Link>
-                  <div className="w-full h-1.5 rounded-full bg-slate-800 mt-2 mb-1 overflow-hidden">
-                    <div
-                      className="h-full bg-indigo-500 rounded-full transition-all"
-                      style={{ width: `${pct}%` }}
+                <div className="flex items-center gap-3">
+                  <Link to={`/shows/${item.show.tmdbId}`} className="shrink-0">
+                    <Poster
+                      name={item.show.name}
+                      posterPath={item.show.posterPath}
+                      className="w-14 aspect-[2/3] rounded-lg"
                     />
+                  </Link>
+                  <div className="flex-1 min-w-0">
+                    <Link
+                      to={`/shows/${item.show.tmdbId}`}
+                      className="font-medium text-stone-800 hover:text-sage-dark truncate block"
+                    >
+                      {item.show.name}
+                    </Link>
+                    <div className="w-full h-1.5 rounded-full bg-stone-900/10 mt-2 mb-1 overflow-hidden">
+                      <div
+                        className="h-full bg-peach rounded-full transition-all"
+                        style={{ width: `${pct}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-stone-400">
+                      {item.progress.watched}/{item.progress.total} episodes
+                    </p>
                   </div>
-                  <p className="text-xs text-slate-500">
-                    {item.progress.watched}/{item.progress.total} episodes
-                  </p>
                 </div>
                 <select
                   value={item.status}
                   onChange={(e) => changeStatus(item.show.id, e.target.value as LibraryStatus)}
-                  className="bg-slate-800 border border-slate-700 rounded-md text-sm px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="mt-3 w-full bg-cream border border-stone-900/10 rounded-lg text-sm px-2 py-1.5 text-stone-700 focus:outline-none focus:ring-2 focus:ring-sage"
                 >
                   {Object.entries(STATUS_LABELS).map(([value, label]) => (
                     <option key={value} value={value}>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { searchShows } from "../api/shows";
 import type { ShowSummary } from "../api/types";
 import { Poster } from "../components/Poster";
+import { SearchIcon } from "../components/icons";
 
 export function DiscoverPage() {
   const [query, setQuery] = useState("");
@@ -25,42 +26,45 @@ export function DiscoverPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold mb-1">Discover</h1>
-      <p className="text-slate-400 text-sm mb-4">Search for shows to add to your library.</p>
+      <h1 className="text-xl font-bold mb-1 text-stone-800">Discover</h1>
+      <p className="text-stone-500 text-sm mb-4">Search for shows to add to your library.</p>
 
       {usingMockData && (
-        <div className="mb-4 text-xs text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-md px-3 py-2">
-          Showing sample data — set <code className="text-amber-200">TMDB_API_KEY</code> in{" "}
-          <code className="text-amber-200">server/.env</code> to pull real shows from TMDB.
+        <div className="mb-4 text-xs text-stone-700 bg-butter/40 border border-butter rounded-lg px-3 py-2">
+          Showing sample data — set <code className="font-semibold">TMDB_API_KEY</code> in{" "}
+          <code className="font-semibold">server/.env</code> to pull real shows from TMDB.
         </div>
       )}
 
-      <input
-        type="search"
-        placeholder="Search shows…"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className="w-full rounded-md bg-slate-900 border border-slate-800 px-4 py-2.5 text-sm mb-6 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-      />
+      <div className="relative mb-5">
+        <SearchIcon className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+        <input
+          type="search"
+          placeholder="Search shows…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          className="w-full rounded-full bg-white border border-stone-900/10 pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-sage shadow-sm"
+        />
+      </div>
 
       {loading ? (
-        <p className="text-slate-500 text-sm">Loading…</p>
+        <p className="text-stone-400 text-sm">Loading…</p>
       ) : results.length === 0 ? (
-        <p className="text-slate-500 text-sm">No shows found.</p>
+        <p className="text-stone-400 text-sm">No shows found.</p>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           {results.map((show) => (
             <Link
               key={show.tmdbId}
               to={`/shows/${show.tmdbId}`}
-              className="group block rounded-lg overflow-hidden bg-slate-900 border border-slate-800 hover:border-indigo-500 transition"
+              className="group block rounded-xl overflow-hidden bg-white border border-stone-900/10 hover:border-sage transition shadow-sm"
             >
               <Poster name={show.name} posterPath={show.posterPath} className="w-full aspect-[2/3]" />
               <div className="p-2">
-                <p className="text-sm font-medium truncate group-hover:text-indigo-400">
+                <p className="text-sm font-medium truncate text-stone-800 group-hover:text-sage-dark">
                   {show.name}
                 </p>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-stone-400">
                   {show.firstAirDate ? show.firstAirDate.slice(0, 4) : "TBA"}
                 </p>
               </div>

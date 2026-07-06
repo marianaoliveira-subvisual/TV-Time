@@ -1,7 +1,16 @@
-function hashHue(seed: string): number {
+const PALETTE_PAIRS = [
+  ["#788e77", "#5f7360"],
+  ["#f5ab7e", "#e29796"],
+  ["#f7c883", "#f5ab7e"],
+  ["#c5c099", "#788e77"],
+  ["#e29796", "#f0d0cf"],
+  ["#f7c883", "#c5c099"],
+];
+
+function paletteIndex(seed: string): number {
   let hash = 0;
   for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
-  return hash % 360;
+  return hash % PALETTE_PAIRS.length;
 }
 
 export function Poster({
@@ -18,19 +27,17 @@ export function Poster({
       <img
         src={posterPath}
         alt={name}
-        className={`object-cover bg-slate-800 ${className}`}
+        className={`object-cover bg-stone-200 ${className}`}
         loading="lazy"
       />
     );
   }
 
-  const hue = hashHue(name);
+  const [from, to] = PALETTE_PAIRS[paletteIndex(name)];
   return (
     <div
       className={`flex items-center justify-center text-center px-2 font-semibold text-white ${className}`}
-      style={{
-        background: `linear-gradient(160deg, hsl(${hue} 70% 32%), hsl(${(hue + 40) % 360} 70% 18%))`,
-      }}
+      style={{ background: `linear-gradient(160deg, ${from}, ${to})` }}
     >
       <span className="line-clamp-4 text-sm">{name}</span>
     </div>
