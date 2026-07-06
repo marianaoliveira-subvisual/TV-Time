@@ -1,0 +1,92 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String          @id @default(uuid())
+  email         String          @unique
+  passwordHash  String
+  displayName   String
+  createdAt     DateTime        @default(now())
+  libraryEntries LibraryEntry[]
+  watchedEpisodes WatchedEpisode[]
+}
+
+model Show {
+  id              String   @id @default(uuid())
+  tmdbId          Int      @unique
+  name            String
+  overview        String
+  posterPath      String?
+  backdropPath    String?
+  firstAirDate    String?
+  status          String?
+  numberOfSeasons Int      @default(0)
+  numberOfEpisodes Int     @default(0)
+  updatedAt       DateTime @updatedAt
+
+  seasons        Season[]
+  libraryEntries LibraryEntry[]
+}
+
+model Season {
+  id           String  @id @default(uuid())
+  showId       String
+  seasonNumber Int
+  name         String
+  episodeCount Int     @default(0)
+  posterPath   String?
+
+  show     Show      @relation(fields: [showId], references: [id], onDelete: Cascade)
+  episodes Episode[]
+
+  @@unique([showId, seasonNumber])
+}
+
+model Episode {
+  id            String   @id @default(uuid())
+  tmdbId        Int?
+  seasonId      String
+  seasonNumber  Int
+  episodeNumber Int
+  name          String
+  overview      String?
+  airDate       String?
+  stillPath     String?
+  runtime       Int?
+
+  season         Season           @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  watchedBy      WatchedEpisode[]
+
+  @@unique([seasonId, episodeNumber])
+}
+
+model LibraryEntry {
+  id        String   @id @default(uuid())
+  userId    String
+  showId    String
+  status    String   @default("watching") // watching | completed | planned | dropped
+  addedAt   DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  show Show @relation(fields: [showId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, showId])
+}
+
+model WatchedEpisode {
+  id        String   @id @default(uuid())
+  userId    String
+  episodeId String
+  watchedAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  episode Episode @relation(fields: [episodeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, episodeId])
+}
