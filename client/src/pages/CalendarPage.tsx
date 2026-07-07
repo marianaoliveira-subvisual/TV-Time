@@ -27,7 +27,7 @@ export function CalendarPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold mb-1 text-stone-800">Upcoming</h1>
+      <h1 className="font-display text-2xl font-bold mb-1 text-stone-800">Upcoming</h1>
       <p className="text-stone-500 text-sm mb-6">New episodes from shows you're tracking.</p>
 
       {groups.size === 0 ? (
@@ -42,7 +42,7 @@ export function CalendarPage() {
         <div className="space-y-6 pb-2">
           {[...groups.entries()].map(([date, episodes]) => (
             <div key={date}>
-              <h2 className="text-sm font-semibold text-sage-dark mb-2">{formatDate(date)}</h2>
+              <h2 className="font-display text-sm font-bold text-sage-dark mb-2">{formatDate(date)}</h2>
               <div className="space-y-2">
                 {episodes.map((ep) => (
                   <Link

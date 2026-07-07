@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { SearchIcon, BookmarkIcon, CalendarIcon, UserIcon, LogoutIcon } from "./icons";
+import { SearchIcon, BookmarkIcon, CalendarIcon, UserIcon, LogoutIcon, LogoMark } from "./icons";
 
 const navItems = [
   { to: "/", label: "Discover", end: true, Icon: SearchIcon },
@@ -16,15 +16,20 @@ export function Layout() {
     <div className="h-screen bg-neutral-200 sm:py-6 sm:flex sm:justify-center">
       <div className="w-full h-full sm:max-w-[430px] sm:h-[calc(100vh-3rem)] sm:rounded-[2.25rem] sm:shadow-2xl sm:border-8 sm:border-stone-900 bg-cream flex flex-col overflow-hidden relative">
         <header className="flex items-center justify-between px-5 pt-5 pb-3 shrink-0">
-          <span className="font-bold text-lg tracking-tight text-sage-dark">TV Time</span>
+          <div className="flex items-center gap-1.5">
+            <LogoMark className="w-6 h-6 text-sage-dark" />
+            <span className="font-display font-bold text-xl tracking-tight text-sage-dark">
+              TV Time
+            </span>
+          </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-stone-600 max-w-[7rem] truncate">
+            <span className="text-xs font-semibold text-stone-500 max-w-[6rem] truncate">
               {user?.displayName}
             </span>
             <button
               onClick={logout}
               aria-label="Log out"
-              className="w-8 h-8 rounded-full bg-white/70 text-stone-500 hover:text-stone-800 flex items-center justify-center transition"
+              className="w-8 h-8 rounded-full bg-white text-stone-500 hover:text-stone-800 shadow-sm flex items-center justify-center transition"
             >
               <LogoutIcon className="w-4 h-4" />
             </button>
@@ -41,16 +46,18 @@ export function Layout() {
               key={to}
               to={to}
               end={end}
-              className={({ isActive }) =>
-                `flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl text-[11px] font-medium transition ${
-                  isActive ? "text-sage-dark" : "text-stone-400"
-                }`
-              }
+              className="flex flex-col items-center gap-0.5 px-1 py-1 rounded-xl text-[11px] font-bold transition min-w-[4.2rem]"
             >
               {({ isActive }) => (
                 <>
-                  <Icon className={`w-5 h-5 ${isActive ? "text-sage-dark" : "text-stone-400"}`} />
-                  {label}
+                  <span
+                    className={`flex items-center justify-center w-9 h-7 rounded-full transition ${
+                      isActive ? "bg-sage text-white" : "text-stone-400"
+                    }`}
+                  >
+                    <Icon className="w-5 h-5" />
+                  </span>
+                  <span className={isActive ? "text-sage-dark" : "text-stone-400"}>{label}</span>
                 </>
               )}
             </NavLink>

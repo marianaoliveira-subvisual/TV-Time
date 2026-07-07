@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
+import type { MouseEvent } from "react";
 import { Link } from "react-router-dom";
-import { searchShows } from "../api/shows";
+import { addToLibrary, searchShows } from "../api/shows";
 import type { ShowSummary } from "../api/types";
 import { Poster } from "../components/Poster";
-import { SearchIcon } from "../components/icons";
+import { SearchIcon, PlusIcon, CheckIcon } from "../components/icons";
 
 export function DiscoverPage() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<ShowSummary[]>([]);
   const [usingMockData, setUsingMockData] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [added, setAdded] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     const handle = setTimeout(() => {
@@ -24,9 +26,16 @@ export function DiscoverPage() {
     return () => clearTimeout(handle);
   }, [query]);
 
+  async function quickAdd(tmdbId: number, e: MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setAdded((prev) => new Set(prev).add(tmdbId));
+    await addToLibrary(tmdbId);
+  }
+
   return (
     <div>
-      <h1 className="text-xl font-bold mb-1 text-stone-800">Discover</h1>
+      <h1 className="font-display text-2xl font-bold mb-1 text-stone-800">Discover</h1>
       <p className="text-stone-500 text-sm mb-4">Search for shows to add to your library.</p>
 
       {usingMockData && (
@@ -53,23 +62,37 @@ export function DiscoverPage() {
         <p className="text-stone-400 text-sm">No shows found.</p>
       ) : (
         <div className="grid grid-cols-2 gap-3">
-          {results.map((show) => (
-            <Link
-              key={show.tmdbId}
-              to={`/shows/${show.tmdbId}`}
-              className="group block rounded-xl overflow-hidden bg-white border border-stone-900/10 hover:border-sage transition shadow-sm"
-            >
-              <Poster name={show.name} posterPath={show.posterPath} className="w-full aspect-[2/3]" />
-              <div className="p-2">
-                <p className="text-sm font-medium truncate text-stone-800 group-hover:text-sage-dark">
-                  {show.name}
-                </p>
-                <p className="text-xs text-stone-400">
-                  {show.firstAirDate ? show.firstAirDate.slice(0, 4) : "TBA"}
-                </p>
-              </div>
-            </Link>
-          ))}
+          {results.map((show) => {
+            const isAdded = added.has(show.tmdbId);
+            return (
+              <Link
+                key={show.tmdbId}
+                to={`/shows/${show.tmdbId}`}
+                className="group block rounded-xl overflow-hidden bg-white border border-stone-900/10 hover:border-sage transition shadow-sm"
+              >
+                <div className="relative">
+                  <Poster name={show.name} posterPath={show.posterPath} className="w-full aspect-[2/3]" />
+                  <button
+                    onClick={(e) => quickAdd(show.tmdbId, e)}
+                    aria-label={isAdded ? "Added to library" : "Quick add to library"}
+                    className={`absolute top-2 right-2 w-7 h-7 rounded-full flex items-center justify-center shadow-md transition ${
+                      isAdded ? "bg-rose text-white" : "bg-white/90 text-sage-dark hover:bg-white"
+                    }`}
+                  >
+                    {isAdded ? <CheckIcon className="w-3.5 h-3.5" /> : <PlusIcon className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
+                <div className="p-2">
+                  <p className="text-sm font-semibold truncate text-stone-800 group-hover:text-sage-dark">
+                    {show.name}
+                  </p>
+                  <p className="text-xs text-stone-400">
+                    {show.firstAirDate ? show.firstAirDate.slice(0, 4) : "TBA"}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>

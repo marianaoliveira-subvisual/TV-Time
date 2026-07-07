@@ -34,7 +34,7 @@ export function LibraryPage() {
 
   return (
     <div>
-      <h1 className="text-xl font-bold mb-1 text-stone-800">My Shows</h1>
+      <h1 className="font-display text-2xl font-bold mb-1 text-stone-800">My Shows</h1>
       <p className="text-stone-500 text-sm mb-4">Everything you're tracking.</p>
 
       <div className="flex gap-1 mb-5 overflow-x-auto">
@@ -81,7 +81,7 @@ export function LibraryPage() {
                   <div className="flex-1 min-w-0">
                     <Link
                       to={`/shows/${item.show.tmdbId}`}
-                      className="font-medium text-stone-800 hover:text-sage-dark truncate block"
+                      className="font-semibold text-stone-800 hover:text-sage-dark truncate block"
                     >
                       {item.show.name}
                     </Link>

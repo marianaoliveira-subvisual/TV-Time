@@ -13,6 +13,11 @@ function paletteIndex(seed: string): number {
   return hash % PALETTE_PAIRS.length;
 }
 
+export function paletteGradient(seed: string): [string, string] {
+  const [from, to] = PALETTE_PAIRS[paletteIndex(seed)];
+  return [from, to];
+}
+
 export function Poster({
   name,
   posterPath,
@@ -33,10 +38,10 @@ export function Poster({
     );
   }
 
-  const [from, to] = PALETTE_PAIRS[paletteIndex(name)];
+  const [from, to] = paletteGradient(name);
   return (
     <div
-      className={`flex items-center justify-center text-center px-2 font-semibold text-white ${className}`}
+      className={`flex items-center justify-center text-center px-2 font-display font-semibold text-white ${className}`}
       style={{ background: `linear-gradient(160deg, ${from}, ${to})` }}
     >
       <span className="line-clamp-4 text-sm">{name}</span>
